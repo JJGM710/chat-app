@@ -16,15 +16,24 @@ io.on('connection', (client) => {
 		client.broadcast
 			.to(data.sala)
 			.emit('listaPersonas', usuarios.getPersonasPorSala(data.sala));
+
+		client.broadcast
+			.to(data.sala)
+			.emit(
+				'crearMensaje',
+				crearMensaje('Administrador', `${data.nombre} entro`)
+			);
 		callback(usuarios.getPersonasPorSala(data.sala));
 	});
 
-	client.on('enviarMensaje', (data) => {
+	client.on('enviarMensaje', (data, callback) => {
 		let persona = usuarios.getPersonaById(client.id);
 
 		let mensaje = crearMensaje(persona.nombre, data.mensaje);
 
 		client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+
+		callback(mensaje);
 	});
 
 	client.on('disconnect', () => {

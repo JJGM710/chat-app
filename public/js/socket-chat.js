@@ -16,6 +16,7 @@ socket.on('connect', function () {
 
 	socket.emit('entrarChat', usuario, (resp) => {
 		console.log('usuarios conectados', resp);
+		renderizarUsuarios(resp);
 	});
 });
 
@@ -26,12 +27,15 @@ socket.on('disconnect', function () {
 
 // Escuchar información de cuaqluier mensaje enviado
 socket.on('crearMensaje', function (mensaje) {
+	renderizarMensajes(mensaje, false);
+	scrollBottom();
 	console.log('Servidor:', mensaje);
 });
 
 // Escuchar cambios de usuarios
 socket.on('listaPersonas', function (usuarios) {
 	console.log(usuarios);
+	renderizarUsuarios(usuarios);
 });
 
 //Mensajes Privados
